@@ -31,3 +31,4 @@ The tests in `tests/test_interfaces.py` wire naive fake implementations
 through all five interfaces end-to-end — a working miniature of the
 pipeline and a template for real implementations to come.
 # basic-rag-pipeline
+# basic-rag-pipeline
