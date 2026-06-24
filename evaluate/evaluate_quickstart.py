@@ -24,6 +24,7 @@ Run:
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -39,27 +40,27 @@ from rag_pipeline.llm import LMStudioClient
 from rag_pipeline.loader import AudioLoader, DoclingLoader
 from rag_pipeline.retriever import DataStoreRetriever
 
-# Sample (question, reference answer) pairs grounded in ISO/IEC 27001:2022.
-# The reference answers come straight from the standard's requirements text
-# and drive the judge's correctness metric.
-SAMPLES = [
-    (
-        "What must an organization conduct at planned intervals to check whether "
-        "the information security management system conforms to requirements and "
-        "is effectively implemented?",
-        "Internal audits.",
-    ),
-    (
-        "What must the Statement of Applicability contain?",
-        "The necessary controls, the justification for including them, whether each "
-        "necessary control is implemented, and the justification for excluding any "
-        "Annex A controls.",
-    ),
-    (
-        "Who must approve the information security policy?",
-        "Management (top management).",
-    ),
-]
+# Sample (question, reference answer) pairs live in ``samples.json`` next to
+# this script. Each entry has a ``question`` and a ``reference_answer``; the
+# reference answers drive the judge's correctness metric.
+SAMPLES_PATH = Path(__file__).resolve().parent / "samples.json"
+
+
+def load_samples(path: Path = SAMPLES_PATH) -> list[tuple[str, str]]:
+    """Load (question, reference_answer) pairs from a JSON file.
+
+    Entries with a blank question or reference answer are skipped, so the
+    empty template that ships with the repo doesn't produce a run.
+    """
+    with path.open(encoding="utf-8") as f:
+        data = json.load(f)
+    samples = []
+    for item in data:
+        question = item["question"].strip()
+        reference = item["reference_answer"].strip()
+        if question and reference:
+            samples.append((question, reference))
+    return samples
 
 
 def main(source: str = "data") -> None:
@@ -87,7 +88,15 @@ def main(source: str = "data") -> None:
     generator = GroundedGenerator(llm)
     evaluator = LLMJudgeEvaluator(llm)
 
-    for question, reference in SAMPLES:
+    samples = load_samples()
+    if not samples:
+        print(
+            f"\nNo evaluation samples found. Add question/reference_answer "
+            f"pairs to {SAMPLES_PATH} and retry."
+        )
+        return
+
+    for question, reference in samples:
         print("\n" + "=" * 70)
         print(f"Q: {question}")
 

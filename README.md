@@ -30,5 +30,59 @@ pip install -e ".[docs]"   # docling, for PDF/DOCX/PPTX/Markdown/... loading
 The tests in `tests/test_interfaces.py` wire naive fake implementations
 through all five interfaces end-to-end — a working miniature of the
 pipeline and a template for real implementations to come.
-# basic-rag-pipeline
-# basic-rag-pipeline
+
+## Adding your data
+
+The `data/` directory is empty by default — populate it with your own
+documents. Drop any supported file (PDF, DOCX, PPTX, Markdown, HTML, and
+audio such as WAV/MP3 with the `[audio]` extra) into `data/` and it gets
+loaded and indexed; the folder is scanned recursively.
+
+```sh
+cp ~/Documents/my-handbook.pdf data/
+```
+
+> Note: `data/` is git-ignored, so your documents stay local and are not
+> committed.
+
+## Evaluation
+
+`evaluate/evaluate_quickstart.py` runs the full pipeline end to end over
+everything in `data/` and scores the generated answers for **faithfulness**
+(to the retrieved context) and **correctness** (against a reference answer)
+using an LLM judge.
+
+The evaluation questions and reference answers live in
+[`evaluate/samples.json`](evaluate/samples.json), separate from the code so
+you can edit them without touching Python. It ships with a single empty
+template entry — fill it in with questions about *your* documents:
+
+```json
+[
+  {
+    "question": "What is the maximum number of vacation days per year?",
+    "reference_answer": "20 days."
+  },
+  {
+    "question": "Who approves expense reports over $500?",
+    "reference_answer": "The department manager."
+  }
+]
+```
+
+Each entry needs a `question` and a `reference_answer`. Add as many entries
+as you like — the evaluator runs every one.
+
+Prerequisites: install an LLM backend extra and start the local server
+(default LM Studio at `http://localhost:1234/v1`):
+
+```sh
+pip install -e ".[lmstudio,chroma,docs]"
+```
+
+Then run:
+
+```sh
+python3 evaluate/evaluate_quickstart.py            # evaluates over data/
+python3 evaluate/evaluate_quickstart.py path/to/docs   # or a custom folder/file
+```
