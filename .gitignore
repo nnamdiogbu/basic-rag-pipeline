@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Data & vector stores
+data/
+*.wav
+*.mp3
+*.mp4
+*.pdf
+chroma/
+*.sqlite3
+*.pkl
+*.parquet
+*.npy
+*.npz
+
+# Environment / secrets
+.env
+.env.*
+
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/

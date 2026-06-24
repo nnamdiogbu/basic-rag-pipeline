@@ -1,0 +1,15 @@
+
+[audio]
+faster-whisper>=1.0
+
+[chroma]
+chromadb>=0.5
+
+[dev]
+pytest>=8
+
+[docs]
+docling>=2.0
+
+[lmstudio]
+openai>=1.0
