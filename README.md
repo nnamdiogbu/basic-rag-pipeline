@@ -1,14 +1,10 @@
 # basic-rag-pipeline
 
-An educational RAG (Retrieval-Augmented Generation) pipeline, built piece
-by piece. The structure comes first: six small interfaces define the
-pipeline, and real implementations get added one at a time.
+A RAG (Retrieval-Augmented Generation) pipeline
 
 ## Architecture
 
-Six small interfaces define the pipeline, and any implementation of one
-can be swapped without touching the others. See
-[ARCHITECTURE.md](ARCHITECTURE.md) for the data-flow diagram, the
+See [ARCHITECTURE.md](ARCHITECTURE.md) for the data-flow diagram, the
 component table, and the data models that flow between the pieces.
 
 ## Setup
